@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Conference extends Model
 {
@@ -44,6 +45,27 @@ class Conference extends Model
 
     ];
 
+
+    public function venue(): BelongsTo
+    {
+        return $this->belongsTo(Venue::class);
+    }
+
+    public function speakers(): BelongsToMany
+    {
+        return $this->belongsToMany(Speaker::class);
+    }
+
+    public function talks(): BelongsToMany
+    {
+        return $this->belongsToMany(Talk::class);
+    }
+
+    public function attendees() : HasMany
+    {
+        return $this->hasMany(Attendee::class);
+
+    }
     public static function getForm(): array
     {
 
@@ -128,26 +150,12 @@ class Conference extends Model
                             return true;
                         })
                         ->action(function ($livewire) {
-                             $data = Conference::factory()->make()->toArray();
-                              unset($data['venue_id']);
-                             $livewire->form->fill($data);
+                            $data = Conference::factory()->make()->toArray();
+                            unset($data['venue_id']);
+                            $livewire->form->fill($data);
                         }),
                 ]),
             ];
     }
 
-    public function venue(): BelongsTo
-    {
-        return $this->belongsTo(Venue::class);
-    }
-
-    public function speakers(): BelongsToMany
-    {
-        return $this->belongsToMany(Speaker::class);
-    }
-
-    public function talks(): BelongsToMany
-    {
-        return $this->belongsToMany(Talk::class);
-    }
 }
